@@ -14,6 +14,17 @@ List.prototype.map = function (f) {
   })
 };
 
+// setoid
+List.prototype.equals = function (that) {
+  return this.cata({
+    Cons: (head, tail) => (
+      head.equals(that.head) &&
+      tail.equals(that.tail)
+    ),
+    Nil: () => that.is(List.Nil)
+  });
+}
+
 List.from = function (xs) {
   return xs.reduceRight(
     (acc, x) => List.Cons(x, acc),

@@ -1,56 +1,5 @@
-import { tagged, taggedSum } from 'daggy';
+import { Coord, Line, Shape } from './Shapes';
 import { List } from './List';
-
-const Coord = tagged('Coord', ['x', 'y', 'z']);
-
-Coord.prototype.translate = function (x, y, z) {
-  return Coord(
-    this.x + x,
-    this.y + y,
-    this.z + z
-  );
-}
-
-const Line = tagged('Line', ['from', 'to']);
-
-// Shape isn't a constructor, it's a type
-const Shape = taggedSum('Shape', {
-  // Square :: (Coord, Coord) -> Shape
-  Square: ['topleft', 'bottomright'],
-
-  // Circle :: (Coord, Number) -> Shape
-  Circle: ['center', 'radius']
-});
-
-Shape.prototype.translate = function (x, y, z) {
-  return this.cata({
-    Square: (topleft, bottomright) => {
-      return Shape.Square(
-        topleft.translate(x, y, z),
-        bottomright.translate(x, y, z)
-      );
-    },
-    Circle: (center, radius) => {
-      return Shape.Circle(
-        center.translate(x, y, z),
-        radius
-      )
-    }
-  })
-}
-
-// Tagged sum: a type with multiple constructors:
-const Bool = taggedSum('Bool', {
-  True: [],
-  False: []
-});
-
-Bool.prototype.invert = function () {
-  this.cata({
-    True: () => Bool.False,
-    False: () => Bool.True
-  })
-}
 
 describe('daggy', () => {
   test('tagged', () => {

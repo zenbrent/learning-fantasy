@@ -1,5 +1,11 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Purpose
+
+Going through these great tutorials:
+
+http://www.tomharding.me/fantasy-land/
+
 ## Available Scripts
 
 In the project directory, you can run:
