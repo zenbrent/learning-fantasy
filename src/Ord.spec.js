@@ -2,6 +2,11 @@
  * Ord: Total ordering
  * Ords must be a Setoid
  * lte aka <= :: Ord a => a ~> a -> Boolean
+ *
+ * Laws:
+ * Totality: a.lte(b) || b.lte(a) == true
+ * Antisymmetry: a.lte(b) && b.lte(a) == a.equals(b)
+ * Transitivity: a.lte(b) && b.lte(c) == a.lte(c)
  */
 
 import { tagged } from 'daggy';
@@ -9,8 +14,10 @@ import { tagged } from 'daggy';
 import { List } from './List';
 import { Bool } from './Bool';
 import { Set_, nub } from './Set';
-import { Number_ } from './Number';
+import { patchNumber } from './Number';
 import { Coord, Line, Shape } from './Shapes';
+
+patchNumber();
 
 const gt = (x, y) =>
   !x.lte(y) &&
@@ -29,8 +36,8 @@ const lte = (x, y) =>
 
 describe('Ord', () => {
   describe('Number_', () => {
-    const n3 = Number_(3);
-    const n4 = Number_(4);
+    const n3 = 3;
+    const n4 = 4;
 
     test('lte', () => {
       expect(n3.lte(n4)).toBe(true);
@@ -58,13 +65,22 @@ describe('Ord', () => {
   });
 
   test('List', () => {
-    const list1 = List.from([1, 6, 3])
-      .map(Number_);
-    const list2 = List.from([1, 5, 3])
-      .map(Number_);
+    const list1 = List.from([1, 6, 3]);
+    const list2 = List.from([1, 5, 3]);
+    const list3 = List.from([1]);
 
     expect(list1.lte(list2)).toBe(false);
     expect(list2.lte(list1)).toBe(true);
+
+    expect(list2.lte(list3)).toBe(false);
+    expect(list3.lte(list2)).toBe(true);
+  });
+
+  test.skip('exercises', () => {
+    // ya, I didn't do bubble sort.
+    // maybe TODO:
+    // make Set more efficient by using a
+    // sorted list
   });
 });
 

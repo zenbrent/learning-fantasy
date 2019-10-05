@@ -28,17 +28,16 @@ List.prototype.equals = function (that) {
 // Ord
 List.prototype.lte = function (that) {
   return this.cata({
-    Cons: (head, tail) =>
-      that.cata({
-        Cons: (head_, tail_) => (
-          head.equals(head_)
-            ? tail.lte(tail_)
-            : head.lte(head_)
-        ),
-        Nil: () => false
-      }),
-    Nil: true
-  })
+    Cons: (head, tail) => that.cata({
+      Cons: (head_, tail_) => (
+        head.equals(head_)
+          ? tail.lte(tail_)
+          : head.lte(head_)
+      ),
+      Nil: () => false
+    }),
+    Nil: () => true
+  });
 }
 
 // Utils
