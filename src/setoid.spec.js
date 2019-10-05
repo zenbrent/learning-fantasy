@@ -8,16 +8,11 @@ import { tagged } from 'daggy';
 import { List } from './List';
 import { Bool } from './Bool';
 import { Set_, nub } from './Set';
+import { Number_ } from './Number';
 
 import { Coord, Line, Shape } from './Shapes';
 
 const notEquals = x => y => !x.equals(y);
-
-// Primitive JS value that's a setoid
-const Primitive = tagged('Primitive', ['value']);
-Primitive.prototype.equals = function (that) {
-  return this.value === that.value;
-};
 
 describe('setoid', () => {
   test('Coord', () => {
@@ -46,9 +41,9 @@ describe('setoid', () => {
   });
 
   test('List', () => {
-    const list1 = List.from([1,2,3]).map(Primitive);
-    const list2 = List.from([1,2,3]).map(Primitive);
-    const list3 = List.from([1,2,9]).map(Primitive);
+    const list1 = List.from([1,2,3]).map(Number_);
+    const list2 = List.from([1,2,3]).map(Number_);
+    const list3 = List.from([1,2,9]).map(Number_);
     expect(list1.equals(list2)).toBe(true);
     expect(list1.equals(list3)).toBe(false);
     expect(notEquals(list1)(list3)).toBe(true);
@@ -56,7 +51,7 @@ describe('setoid', () => {
 
   test('nub', () => {
     const uniq = nub(
-      [5,1,2,3,3,4,4,5].map(x => Primitive(x))
+      [5,1,2,3,3,4,4,5].map(x => Number_(x))
     )
       .map(x => x.value);
     expect(uniq).toEqual([5, 1, 2, 3, 4]);
@@ -64,12 +59,12 @@ describe('setoid', () => {
 
   test('set', () => {
     const s = Set_.from(
-      [1,2,3,3,3].map(x => Primitive(x))
+      [1,2,3,3,3].map(x => Number_(x))
     );
     expect(s.toArray().map(n => n.value))
       .toEqual([1,2,3]);
 
-    s.remove(Primitive(2));
+    s.remove(Number_(2));
     expect(s.toArray().map(n => n.value))
       .toEqual([1,3]);
   })

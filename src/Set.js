@@ -1,6 +1,5 @@
 import { tagged, taggedSum } from 'daggy';
 
-
 // indexOf using .equals, ends at max as
 // a performance optimization
 const indexOf = xs => max => x => {

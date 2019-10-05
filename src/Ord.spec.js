@@ -9,7 +9,7 @@ import { tagged } from 'daggy';
 import { List } from './List';
 import { Bool } from './Bool';
 import { Set_, nub } from './Set';
-
+import { Number_ } from './Number';
 import { Coord, Line, Shape } from './Shapes';
 
 const gt = (x, y) =>
@@ -26,15 +26,6 @@ const lt = (x, y) =>
 const lte = (x, y) =>
   !gte(x, y);
 
-const Number_ = tagged('Number_', ['value']);
-// Setoid
-Number_.prototype.equals = function (that) {
-  return this.value == that.value;
-}
-// Ord
-Number_.prototype.lte = function (that) {
-  return this.value <= that.value;
-}
 
 describe('Ord', () => {
   describe('Number_', () => {
