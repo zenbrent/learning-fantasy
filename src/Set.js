@@ -1,5 +1,7 @@
 import { tagged, taggedSum } from 'daggy';
 
+const addTo = (a, b) => a.add(b);
+
 // indexOf using .equals, ends at max as
 // a performance optimization
 const indexOf = xs => max => x => {
@@ -16,10 +18,7 @@ export const nub = xs => xs.filter(
 export const Set_ = tagged('Set_', []);
 
 Set_.from = function (xs) {
-  return xs.reduceRight(
-    (s, x) => s.add(x),
-    Set_()
-  );
+  return xs.reduceRight(addTo, Set_());
 }
 
 Set_.prototype.toArray = function () {
@@ -36,5 +35,15 @@ Set_.prototype.add = function add (value) {
 Set_.prototype.remove = function remove (value) {
   this.arr = this.arr.filter(x => !x.equals(value));
   return this;
+}
+
+Set_.prototype.concat = function remove (that) {
+  return this.arr.reduceRight(
+    addTo,
+    that.arr.reduceRight(
+      addTo,
+      Set_()
+    )
+  );
 }
 
