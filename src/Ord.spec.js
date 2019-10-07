@@ -7,9 +7,9 @@
  * Totality: a.lte(b) || b.lte(a) == true
  * Antisymmetry: a.lte(b) && b.lte(a) == a.equals(b)
  * Transitivity: a.lte(b) && b.lte(c) == a.lte(c)
+ *
+ * http://www.tomharding.me/2017/04/09/fantas-eel-and-specification-3.5/
  */
-
-import { tagged } from 'daggy';
 
 import { List } from './List';
 import { Bool } from './Bool';
