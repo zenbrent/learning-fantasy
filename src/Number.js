@@ -18,9 +18,22 @@ export function patchBuiltins () {
   Number.prototype.equals = function (that) {
     return this === that;
   }
+
   String.prototype.equals = function (that) {
     return this === that;
   }
+
+  // Semigroup
+  Function.prototype.concat = function (that) {
+    return x => this(x).concat(that(x));
+  }
+
+  // Monoid
+  String.empty = () => "";
+  Array.empty = () => [];
+
+  // see https://joneshf.github.io/programming/2014/09/24/FizzBuzz-With-Semigroups-And-Apply.html
+  // Function.prototype.empty // fucking javascript.. needs a TypeRep
 
   // Ord
   Number.prototype.lte = function (that) {

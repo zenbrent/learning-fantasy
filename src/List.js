@@ -57,3 +57,5 @@ List.prototype.toArray = function () {
   })
 }
 
+List.empty = () => List.Nil;
+
