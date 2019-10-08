@@ -9,59 +9,16 @@
  * http://www.tomharding.me/2017/03/13/fantas-eel-and-specification-4/
  */
 
-import { tagged } from 'daggy';
-
-import { Tuple } from './List';
+import { Customer } from './Customer';
+import { Tuple } from './Tuple';
 import { List } from './List';
 import { Bool } from './Bool';
-import { Set_, nub } from './Set';
-import { patchNumber } from './Number';
+import { Set_ } from './Set';
+import { patchBuiltins } from './Number';
 import { Coord, Line, Shape } from './Shapes';
+import { Sum, Product, Any, All, First, Last, SetSemigroup } from './Semigroup';
 
-patchNumber();
-
-// Semigroup types for numbers
-const Sum = tagged('Sum', ['val']);
-Sum.prototype.concat = function (that) {
-  return Sum(this.val + that.val);
-};
-
-const Product = tagged('Product', ['val']);
-Product.prototype.concat = function (that) {
-  return Product(this.val * that.val);
-};
-
-// Semigroup types for booleans
-const Any = tagged('Any', ['val']);
-Any.prototype.concat = function (that) {
-  return Any(this.val || that.val);
-};
-
-const All = tagged('All', ['val']);
-All.prototype.concat = function (that) {
-  return All(this.val && that.val);
-};
-
-// Any inner type
-const First = tagged('First', ['val']);
-First.prototype.concat = function (that) {
-  return this;
-};
-
-const Last = tagged('Last', ['val']);
-Last.prototype.concat = function (that) {
-  return that;
-};
-
-// Inner type constrained to be a Setoid
-const SetSemigroup = tagged('SetSemigroup', ['val']);
-SetSemigroup.prototype.concat = function (that) {
-  return SetSemigroup(
-    nub(
-      this.val.concat(that.val)
-    )
-  );
-}
+patchBuiltins();
 
 
 describe('Semigroup', () => {
@@ -141,8 +98,46 @@ describe('Semigroup', () => {
     );
   });
 
-  describe.skip('Tuple', () => {
+  describe('Tuple', () => {
+    test('Semigroup', () => {
+      expect(
+        Tuple(Sum(1), Any(false))
+        .concat(
+          Tuple(Sum(5), Any(true))
+        )
+      ).toEqual(
+        Tuple(Sum(6), Any(true))
+      )
+    });
+  });
 
+  describe('Customer', () => {
+    const regDate = Date.now() - 1000;
+
+    const brent1 = Customer(
+      'brent',
+      Set_.from(['coffee', 'dance']),
+      regDate,
+      false
+    );
+
+    const brent2 = Customer(
+      'brent',
+      Set_.from(['dance', 'wine']),
+      Date.now(),
+      true
+    );
+
+    expect(
+      brent1.concat(brent2)
+    ).toEqual(
+      Customer(
+        'brent',
+        Set_.from(['coffee', 'dance', 'wine']),
+        regDate,
+        true
+      )
+    );
   });
 });
 

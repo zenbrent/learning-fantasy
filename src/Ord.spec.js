@@ -14,10 +14,10 @@
 import { List } from './List';
 import { Bool } from './Bool';
 import { Set_, nub } from './Set';
-import { patchNumber } from './Number';
+import { patchBuiltins } from './Number';
 import { Coord, Line, Shape } from './Shapes';
 
-patchNumber();
+patchBuiltins();
 
 const gt = (x, y) =>
   !x.lte(y) &&

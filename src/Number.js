@@ -13,9 +13,12 @@ Number_.prototype.lte = function (that) {
 }
 
 // or monkey patch Number -- not a good idea. ;)
-export function patchNumber () {
+export function patchBuiltins () {
   // Setoid
   Number.prototype.equals = function (that) {
+    return this === that;
+  }
+  String.prototype.equals = function (that) {
     return this === that;
   }
 
