@@ -13,6 +13,8 @@
  * Sets aren't functors -- their inner type must
  * be a semigroup, and functors don't restrict
  * the contents to be semigroups.
+ * Functor extends the language into a world.
+ * Putting the fn in that world is called "lifting" it.
  *
  * http://www.tomharding.me/2017/03/27/fantas-eel-and-specification-6/
  */
@@ -32,6 +34,6 @@ import { foldLP } from './ParallelFold';
 patchBuiltins();
 
 describe('Functor', () => {
-  test.skip('', () => {
+  test('', () => {
   });
 });
