@@ -1,19 +1,27 @@
 import { tagged, taggedSum } from 'daggy';
 
+import { Equivalence } from './Equivalence';
+
 const addTo = (a, b) => a.add(b);
+
+const isEq = Equivalence(x => y => x.equals(y));
 
 // indexOf using .equals, ends at max as
 // a performance optimization
-const indexOf = xs => max => x => {
+const indexOf = equivalence => xs => max => x => {
+  const eq = equivalence.f(x);
   for (let i = 0; i <= max; i++)
-    if (xs[i].equals(x))
+    if (eq(xs[i]))
       return i;
   return -1;
 };
-// nub (aka uniq) :: Setoid a -> [a] -> [a]
-export const nub = xs => xs.filter(
-  (x, i) => indexOf(xs)(i)(x) === i
+
+export const unique = equivalence => xs => xs.filter(
+  (x, i) => indexOf(equivalence)(xs)(i)(x) === i
 );
+
+// nub (aka uniq) :: Setoid a -> [a] -> [a]
+export const nub = unique(isEq);
 
 export const Set_ = tagged('Set_', []);
 
