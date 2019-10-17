@@ -24,13 +24,8 @@ import { Just, Nothing } from './Maybe';
 import { Left, Right } from './Either';
 import Task from 'data.task';
 import { patchArray } from './Array';
+import { lift2, liftN } from './lift';
 patchArray();
-
-const lift2 = f => a => b =>
-  b.ap(a.map(f));
-
-const lift3 = f => a => b => c =>
-  c.ap(b.ap(a.map(f)))
 
 const Identity = tagged('Identity', ['x']);
 
@@ -45,9 +40,10 @@ Identity.prototype.ap = function (b) {
 }
 
 const add = x => y => x + y;
+const add4 = x => y => z => a => x + y + z + a;
 const pow = y => x => Math.pow(x, y);
 
-describe('lift2', () => {
+describe('lift', () => {
   test('Identity', () => {
     expect(
       lift2(add)
@@ -55,7 +51,17 @@ describe('lift2', () => {
         (Identity(3))
     ).toEqual(
       Identity(5)
-    )
+    );
+
+    expect(
+      liftN(4)(add4)
+        (Identity(2))
+        (Identity(3))
+        (Identity(8.5))
+        (Identity(9))
+    ).toEqual(
+      Identity(22.5)
+    );
   });
 
   test('Array', () => {
@@ -80,7 +86,9 @@ describe('lift2', () => {
       [5, 6, 7, 6, 7, 8, 7, 8, 9]
     );
   });
+});
 
+describe('Combining with Apply', () => {
   test('Maybe', () => {
     expect(Just(2).ap(Just(add(1)))).toEqual(Just(3));
     expect(Just(2).ap(Nothing)).toEqual(Nothing);
