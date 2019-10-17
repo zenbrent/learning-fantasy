@@ -16,6 +16,8 @@
  * (in function application)
  * 
  * Most types implement Apply using Chain
+ *
+ * http://www.tomharding.me/2017/04/10/fantas-eel-and-specification-8/
  */
 
 import { tagged } from 'daggy';
