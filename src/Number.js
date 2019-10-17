@@ -30,7 +30,6 @@ export function patchBuiltins () {
 
   // Monoid
   String.empty = () => "";
-  Array.empty = () => [];
 
   // see https://joneshf.github.io/programming/2014/09/24/FizzBuzz-With-Semigroups-And-Apply.html
   // Function.prototype.empty // fucking javascript.. needs a TypeRep

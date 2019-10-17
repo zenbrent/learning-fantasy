@@ -25,6 +25,7 @@ import { List } from './List';
 import { Bool } from './Bool';
 import { Set_ } from './Set';
 import { patchBuiltins } from './Number';
+import { patchArray } from './Array';
 import { Coord, Line, Shape } from './Shapes';
 import {
   foldL, foldR,
@@ -32,6 +33,7 @@ import {
 } from './Semigroup';
 import { foldLP } from './ParallelFold';
 
+patchArray();
 patchBuiltins();
 
 describe('Monoid', () => {
