@@ -6,4 +6,7 @@ export function patchArray () {
   Array.prototype.ap = function (fs) {
     return fs.flatMap(f => this.map(f));
   }
+
+  // Applicative
+  Array.of = x => [x];
 }

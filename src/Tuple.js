@@ -32,6 +32,26 @@ export const TupleMonoid = (TypeA, TypeB) => {
   return Tuple;
 }
 
+export const TupleApplicative = T => {
+  const Tuple = tagged('TupleApplicative', ['a', 'b']);
+
+  // Tuple is only a semigroup when it's contents
+  // are semigroups.
+  Tuple.prototype.concat = function (that) {
+    return Tuple(
+      this.a.concat(that.a),
+      this.b.concat(that.b),
+    );
+  }
+
+  Tuple.of = x => Tuple(
+    T.empty(),
+    x
+  );
+
+  return Tuple;
+}
+
 export const Tuple3 = tagged('Tuple4', ['a', 'b', 'c']);
 
 Tuple3.prototype.concat = function (that) {

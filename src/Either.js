@@ -17,3 +17,5 @@ Either.prototype.ap = function (that) {
   });
 }
 
+// Applicative
+Either.of = Right;

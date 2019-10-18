@@ -40,6 +40,30 @@ List.prototype.lte = function (that) {
   });
 }
 
+List.prototype.reduce = function (f, init) {
+  return this.cata({
+    Cons: (head, tail) =>  {
+      const acc = f(init, head);
+      return tail.reduce(f, acc);
+    },
+    Nil: () => init
+  });
+}
+
+List.prototype.concat = function (that) {
+  function findEnd (cell) {
+    return cell.cata({
+      Cons: (head, tail) =>
+        List.Cons(head, findEnd(tail)),
+      Nil: () => that
+    });
+  }
+  return findEnd(this);
+}
+
+// Applicative
+List.of = x => List.Cons(x, List.Nil);
+
 // Utils
 List.from = function (xs) {
   return xs.reduceRight(

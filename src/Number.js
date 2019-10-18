@@ -38,4 +38,7 @@ export function patchBuiltins () {
   Number.prototype.lte = function (that) {
     return this <= that;
   }
+
+  // Applicative
+  Function.of = x => () => x;
 }

@@ -17,6 +17,7 @@ import { Set_ } from './Set';
 import { patchBuiltins } from './Number';
 import { Coord, Line, Shape } from './Shapes';
 import { Sum, Product, Any, All, First, Last, SetSemigroup } from './Semigroup';
+import { Just, Nothing } from './Maybe';
 
 patchBuiltins();
 
@@ -138,6 +139,20 @@ describe('Semigroup', () => {
         true
       )
     );
+  });
+
+  describe('Maybe', () => {
+    expect(Just([1]).concat(Just([2])))
+      .toEqual(Just([1, 2]));
+
+    expect(Just([1]).concat(Nothing))
+      .toEqual(Just([1]));
+
+    expect(Nothing.concat(Just([2])))
+      .toEqual(Just([2]));
+
+    expect(Nothing.concat(Nothing))
+      .toEqual(Nothing);
   });
 });
 
