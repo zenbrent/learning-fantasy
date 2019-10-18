@@ -28,7 +28,6 @@
  * http://www.tomharding.me/2017/04/17/fantas-eel-and-specification-9/
  */
 
-import { tagged } from 'daggy';
 import { lift2 } from './lift';
 import { Maybe, Just, Nothing } from './Maybe';
 import { List } from './List';
