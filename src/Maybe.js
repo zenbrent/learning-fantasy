@@ -46,6 +46,13 @@ Maybe.prototype.alt = function (that) {
   });
 }
 
+Maybe.prototype.reduce = function (f) {
+  return acc => this.cata({
+    Just: f(acc),
+    Nothing: () => acc
+  })
+}
+
 // Plus
 Maybe.zero = () => Nothing;
 

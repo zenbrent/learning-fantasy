@@ -34,5 +34,13 @@ Either.prototype.alt = function (that) {
   });
 }
 
+Either.prototype.reduce = function (f) {
+  return acc => this.cata({
+    Left: f(acc),
+    Right: () => acc
+  })
+}
+
+
 // Applicative
 Either.of = Right;
