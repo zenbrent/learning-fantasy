@@ -38,6 +38,17 @@ Maybe.prototype.concat = function (that) {
   });
 }
 
+// Alt
+Maybe.prototype.alt = function (that) {
+  return this.cata({
+    Just: () => this,
+    Nothing: () => that
+  });
+}
+
+// Plus
+Maybe.zero = () => Nothing;
+
 // Applicative
 Maybe.of = Just;
 

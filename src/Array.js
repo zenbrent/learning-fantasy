@@ -7,6 +7,9 @@ export function patchArray () {
     return fs.flatMap(f => this.map(f));
   }
 
+  // Plus
+  Array.empty = () => [];
+
   // Applicative
   Array.of = x => [x];
 }

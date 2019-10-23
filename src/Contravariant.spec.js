@@ -74,6 +74,9 @@ describe("Contravariant", () => {
     expect(
       caseInsensitiveSearch.f('asdf')('A(#Sd)F')
     ).toBe(true);
+
+
+    // TODO: Use Equivalence in Setoid
   });
 });
 

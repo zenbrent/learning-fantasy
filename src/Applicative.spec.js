@@ -28,9 +28,11 @@
  * http://www.tomharding.me/2017/04/17/fantas-eel-and-specification-9/
  */
 
-import { lift2 } from './lift';
+import { tagged } from 'daggy';
+import { lift2, lift3 } from './lift';
 import { Maybe, Just, Nothing } from './Maybe';
 import { List } from './List';
+import { Left, Right } from './Either';
 
 import { patchArray } from './Array';
 patchArray();
@@ -133,3 +135,57 @@ describe('Applicative', () => {
   });
 });
 
+describe('Failing', () => {
+  const SomeType = tagged('SomeType', ['a', 'b', 'c']);
+
+  SomeType.prototype.map = function (f) {
+    return SomeType(
+      f(this.a),
+      f(this.b),
+      f(this.c)
+    );
+  }
+
+  // is this a normal way of doing it?
+  SomeType.prototype.ap = function (that) {
+    return SomeType(
+      that.a(this.a),
+      that.b(this.b),
+      that.c(this.c)
+    );
+  }
+
+  test('Maybe', () => {
+    expect(
+      lift3(a => b => c => SomeType(a, b, c))(Just(1))(Just(2))(Just(3))
+    ).toEqual(
+      Just(SomeType(1, 2, 3))
+    );
+
+    expect(
+      lift3(a => b => c => SomeType(a, b, c))(Just(1))(Nothing)(Just(3))
+    ).toEqual(
+      Nothing
+    );
+  });
+
+  test('Either -- with errors!', () => {
+    expect(
+      lift3(a => b => c => SomeType(a, b, c))(Right(1))(Right(2))(Right(3))
+    ).toEqual(
+      Right(SomeType(1, 2, 3))
+    );
+
+    expect(
+      lift3(a => b => c => SomeType(a, b, c))(Right(1))(Left('An error!'))(Right(3))
+    ).toEqual(
+      Left('An error!')
+    );
+
+    expect(
+      lift3(a => b => c => SomeType(a, b, c))(Left('An error!'))(Left('Multiple errors?'))(Right(3))
+    ).toEqual(
+      Left('Multiple errors?')
+    );
+  });
+});
