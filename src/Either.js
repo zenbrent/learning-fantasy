@@ -28,9 +28,9 @@ Either.prototype.ap = function (that) {
 // Alt
 // alt :: Either a ~> Either b -> Either 
 Either.prototype.alt = function (that) {
-  return this.cata({
-    Left: () => that,
-    Right: () => this
+  return that.cata({
+    Left: () => this,
+    Right: () => that
   });
 }
 

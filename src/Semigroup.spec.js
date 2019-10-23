@@ -19,14 +19,17 @@ import { Coord, Line, Shape } from './Shapes';
 import { Sum, Product, Any, All, First, Last, SetSemigroup } from './Semigroup';
 import { Just, Nothing } from './Maybe';
 
+import { concat } from 'sanctuary';
+
 patchBuiltins();
 
 
 describe('Semigroup', () => {
   test('String', () => {
     // String is already a semigroup!
-    const chained = 'hi'.concat('world').concat('!');
-    const composed = 'hi'.concat('world'.concat('!'));
+    const chained = concat(concat('hi')('world'))('!');
+    const composed = concat('hi')(concat('world')('!'));
+    expect(chained).toEqual('hiworld!');
     expect(chained).toEqual(composed);
   });
 

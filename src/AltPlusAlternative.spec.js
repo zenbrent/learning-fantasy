@@ -55,9 +55,12 @@
  * http://www.tomharding.me/2017/04/24/fantas-eel-and-specification-10/
  */
 
+import SEither from 'sanctuary-either';
+import { alt } from 'sanctuary';
+
 import { tagged } from 'daggy';
 import { Maybe, Just, Nothing } from './Maybe';
-import { Left, Right } from './Either';
+import { Either } from './Either';
 import { List } from './List';
 import { Alt, Plus } from './Alt';
 import { lift2 } from './lift';
@@ -65,50 +68,60 @@ import { lift2 } from './lift';
 import { patchArray } from './Array';
 patchArray();
 
-describe('Alt', () => {
-  test('Maybe', () => {
-    expect(
-      Nothing.alt(Nothing).alt(Just(3))
-    ).toEqual(Just(3))
+testAlt('Sanctuary', SEither, alt);
 
-    expect(
-      Just(5).alt(Nothing).alt(Just(3))
-    ).toEqual(Just(5))
+testAlt('Daggy', Either, a => b => a.alt(b));
+
+function testAlt (name,Either, alt) {
+  const { Left, Right } = Either;
+
+  describe(name, () => {
+    describe('Alt', () => {
+      test('Maybe', () => {
+        expect(
+          Nothing.alt(Nothing).alt(Just(3))
+        ).toEqual(Just(3))
+
+        expect(
+          Just(5).alt(Nothing).alt(Just(3))
+        ).toEqual(Just(5))
+      });
+    });
+
+    test('Plus', () => {
+      expect(
+        Maybe.empty().map(x => x + 1)
+      ).toEqual(Nothing)
+
+      expect(
+        Array.empty().map(x => x + 1)
+      ).toEqual([])
+    });
+
+    test('Either', () => {
+      expect(
+        alt (Left('first')) (Left('second'))
+      ).toEqual(Left('first'));
+
+      expect(
+        alt (Right('first')) (Right('second'))
+      ).toEqual(Right('second'));
+
+      expect(
+        alt (Left('first')) (Right('second'))
+      ).toEqual(Right('second'));
+
+      expect(
+        alt (Right('first')) (Left('second'))
+      ).toEqual(Right('first'));
+    });
+
+    describe('Alternative', () => {
+      test('Maybe', () => {
+        expect(
+          Just(2).ap(Maybe.zero())
+        ).toEqual(Nothing);
+      });
+    });
   });
-});
-
-test('Plus', () => {
-  expect(
-    Maybe.empty().map(x => x + 1)
-  ).toEqual(Nothing)
-
-  expect(
-    Array.empty().map(x => x + 1)
-  ).toEqual([])
-});
-
-test('Either', () => {
-  expect(
-    Left('first').alt(Left('second'))
-  ).toEqual(Left('second'));
-
-  expect(
-    Right('first').alt(Right('second'))
-  ).toEqual(Left('first'));
-
-  expect(
-    Left('first').alt(Right('second'))
-  ).toEqual(Left('second'));
-
-  expect(
-    Right('first').alt(Left('second'))
-  ).toEqual(Left('first'));
-});
-
-describe('Alternative', () => {
-  test('Maybe', () => {
-    expect(
-      Just(2).ap(Maybe.zero())
-    ).toEqual(Nothing);
-  });
-});
+}
