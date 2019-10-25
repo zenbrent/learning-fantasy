@@ -1,6 +1,8 @@
 import { tagged, taggedSum } from 'daggy';
 import { lift2 } from './lift';
 
+const map = f => x => x.map(v => f(v));
+
 export const Maybe = taggedSum('Maybe', {
   Just: ['val'],
   Nothing: []
@@ -51,6 +53,13 @@ Maybe.prototype.reduce = function (f) {
     Just: f(acc),
     Nothing: () => acc
   })
+}
+
+Maybe.prototype.traverse = function (T) {
+  return f => this.cata({
+    Nothing: () => T.of(Nothing),
+    Just: x => map (Just) (f(x))
+  });
 }
 
 // Plus

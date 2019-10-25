@@ -1,5 +1,7 @@
 import { taggedSum } from 'daggy';
 
+import { lift3 } from './lift';
+
 export const BTree = taggedSum('BTree', {
   Node: ['left', 'x', 'right'],
   Leaf: []
@@ -29,6 +31,17 @@ BTree.prototype.map = function (f) {
       right.map(f)
     )
   });
+}
+
+BTree.prototype.traverse = function (T) {
+  return f => this.cata({
+    Node: (l, n, r) => lift3
+      (l, n, r => Node(l, n, r))
+      (l.traverse (T) (f))
+      (f(n))
+      (r.traverse (T) (f)),
+    Leaf: () => T.of(Leaf)
+  })
 }
 
 BTree.of = val => Node(Leaf, val, Leaf);
