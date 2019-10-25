@@ -1,5 +1,9 @@
 import { taggedSum } from 'daggy';
 
+// import Either from 'data.either';
+// export { Either };
+// export const { Left, Right } = Either;
+
 export const Either = taggedSum('Either', {
   Left: ['val'],
   Right: ['val']
@@ -9,7 +13,7 @@ export const { Left, Right } = Either;
 
 Either.prototype.map = function (f) {
   return this.cata({
-    Left: val => Left(f(val)),
+    Left: () => this,
     Right: val => Right(f(val))
   });
 }
@@ -17,16 +21,16 @@ Either.prototype.map = function (f) {
 
 Either.prototype.ap = function (that) {
   return this.cata({
-    Left: Left,
-    Right: right1 => that.cata({
-      Left: Left,
-      Right: right2 => Right(right2(right1))
+    Left: () => this,
+    Right: val1 => that.cata({
+      Left: () => that,
+      Right: val2 => Right(val2(val1))
     })
   });
 }
 
 // Alt
-// alt :: Either a ~> Either b -> Either 
+// alt :: Either a ~> Either b -> Either
 Either.prototype.alt = function (that) {
   return that.cata({
     Left: () => this,
