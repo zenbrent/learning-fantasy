@@ -35,13 +35,13 @@ BTree.prototype.map = function (f) {
 
 BTree.prototype.traverse = function (T) {
   return f => this.cata({
-    Node: (l, n, r) => lift3
-      (l, n, r => Node(l, n, r))
-      (l.traverse (T) (f))
-      (f(n))
-      (r.traverse (T) (f)),
+    Node: (l, n, r) =>
+      lift3 (l, n, r => Node(l, n, r))
+        (l.traverse (T) (f))
+        (f(n))
+        (r.traverse (T) (f)),
     Leaf: () => T.of(Leaf)
-  })
+  });
 }
 
 BTree.of = val => Node(Leaf, val, Leaf);

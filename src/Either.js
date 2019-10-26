@@ -11,6 +11,27 @@ export const Either = taggedSum('Either', {
 
 export const { Left, Right } = Either;
 
+
+Either.prototype.concat = function (that) {
+  return this.cata({
+    Left: val1 => that.cata({
+      Left: val2 => Left(val1.concat(val2)),
+      Right: () => that
+    }),
+    Right: val1 => that.cata({
+      Left: () => this,
+      Right: val2 => Right(val1.concat(val2))
+    })
+  });
+}
+
+Either.prototype.inverse = function () {
+  return this.cata({
+    Left: Right,
+    Right: Left
+  });
+}
+
 Either.prototype.map = function (f) {
   return this.cata({
     Left: () => this,
@@ -45,6 +66,12 @@ Either.prototype.reduce = function (f) {
   })
 }
 
+Either.prototype.traverse = function (T) {
+  return f => this.cata({
+    Left: val => Left(T.of(val)),
+    Right: val => f(val).map(x => Right(x))
+  });
+}
 
 // Applicative
 Either.of = Right;

@@ -45,23 +45,45 @@ describe('Traversable', () => {
       [Left(1), Left(2), Right(3)].traverse (Either) (x => x.cata({ Left: Right, Right: Left}))
     ).toEqual(Left(3));
 
-
-    const alphabet = Array(26).fill(0).map((_, i) => i)
-      .traverse (Either) (toChar);
-
-    expect(
-      alphabet
-    ).toEqual(Right([
+    const alphabet = [
       "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
       "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
-    ]));
+    ];
 
-    const alphabetWithErrors = Array(27).fill(0).map((_, i) => i)
+    const calculatedAlphabet = Array(26).fill(0).map((_, i) => i)
       .traverse (Either) (toChar);
 
     expect(
-      alphabetWithErrors
+      calculatedAlphabet
+    ).toEqual(Right(alphabet));
+
+    const alphabetError = Array(27).fill(0).map((_, i) => i)
+      .traverse (Either) (toChar);
+
+    expect(
+      alphabetError
     ).toEqual(Left('26 is out of bounds!'));
+
+    // Get all the values or errors
+    const calculatedWithErrors = Array(4).fill(0).map((_, i) => i + 24)
+      .map(toChar)
+
+    expect(
+      calculatedWithErrors
+      .map(map(x => [x]))
+      .reduce((acc, x) => acc.concat(x), Right([]))
+    ).toEqual(Right(['Y', 'Z']));
+
+    expect(
+      calculatedWithErrors
+      .map(x => x.inverse())
+      .map(map(x => [x]))
+      .reduce((acc, x) => acc.concat(x), Right([]))
+    ).toEqual(Right([
+      '26 is out of bounds!',
+      '27 is out of bounds!'
+    ]));
+
   });
 
   test('Maybe', () => {
