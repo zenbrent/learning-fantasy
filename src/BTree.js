@@ -1,4 +1,5 @@
 import { taggedSum } from 'daggy';
+import { genericApImpl } from './genericAp';
 
 import { lift3 } from './lift';
 
@@ -43,6 +44,14 @@ BTree.prototype.equals = function (that) {
   });
 }
 
+BTree.prototype.chain = function (f) {
+  return this.cata({
+    Leaf: () => Leaf,
+    Node: (left, x, right) => f(x)
+  });
+}
+
+// BTree.prototype.ap = genericApImpl;
 BTree.prototype.ap = function (that) {
   return this.cata({
     Leaf: () => this,

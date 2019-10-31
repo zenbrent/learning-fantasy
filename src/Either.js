@@ -87,5 +87,20 @@ Either.prototype.traverse = function (T) {
   });
 }
 
+
+Either.prototype.chain = function (f) {
+  return this.cata({
+    Left: () => this,
+    Right: f
+  });
+}
+
+// Like sequence = traverse (identity)
+// chain is join (identity)
+Either.prototype.join = function () {
+  return this.chain(x => x);
+}
+
+
 // Applicative
 Either.of = Right;

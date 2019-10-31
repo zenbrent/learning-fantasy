@@ -8,7 +8,7 @@
 import { tagged } from 'daggy';
 
 export const Pair = T => {
-  const Pair = daggy.tagged('Pair', ['_1', '_2']);
+  const Pair = tagged('Pair', ['_1', '_2']);
 
   Pair.prototype.map = function (f) {
     return Pair(this._1, f(this._2));
@@ -21,10 +21,10 @@ export const Pair = T => {
 
   Pair.of = x => Pair(T.empty(), x);
 
-  Pair_.prototype.chain = function (f) {
+  Pair.prototype.chain = function (f) {
     const that = f(this._2);
 
-    return Pair_(this._1.concat(that._1),
+    return Pair(this._1.concat(that._1),
       that._2);
   }
 

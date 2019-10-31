@@ -1,5 +1,6 @@
 import { tagged, taggedSum } from 'daggy';
 import { lift2 } from './lift';
+import { genericApImpl } from './genericAp';
 
 const map = f => x => x.map(v => f(v));
 
@@ -18,6 +19,7 @@ Maybe.prototype.map = function (f) {
   });
 }
 
+
 // Apply
 Maybe.prototype.ap = function (that) {
   return this.cata({
@@ -28,6 +30,8 @@ Maybe.prototype.ap = function (that) {
     Nothing: () => Nothing
   });
 }
+//// or using chain
+// Maybe.prototype.ap = genericApImpl;
 
 // Semigroup
 Maybe.prototype.concat = function (that) {
@@ -60,6 +64,19 @@ Maybe.prototype.traverse = function (T) {
     Nothing: () => T.of(Nothing),
     Just: x => map (Just) (f(x))
   });
+}
+
+Maybe.prototype.chain = function (f) {
+  return this.cata({
+    Nothing: () => this,
+    Just: f
+  });
+}
+
+// Like sequence = traverse (identity)
+// chain is join (identity)
+Maybe.prototype.join = function () {
+  return this.chain(x => x);
 }
 
 // Plus

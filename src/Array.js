@@ -1,4 +1,5 @@
 import { lift2 } from './lift';
+import { genericApImpl } from './genericAp';
 
 // append :: a -> [a] -> [a]
 const append = y => xs => xs.concat([y])
@@ -12,9 +13,7 @@ export function patchArray () {
   Array.empty = () => [];
 
   // Apply -- cartesian product
-  Array.prototype.ap = function (fs) {
-    return fs.flatMap(f => this.map(f));
-  }
+  Array.prototype.ap = genericApImpl;
 
   // Plus
   Array.empty = () => [];
@@ -44,9 +43,12 @@ export function patchArray () {
     }
   }
 
-
   Array.prototype.sequence = function (T) {
     return sequence (T) (this);
+  }
+
+  Array.prototype.chain = function (f) {
+    return this.flatMap(f);
   }
 
 }
