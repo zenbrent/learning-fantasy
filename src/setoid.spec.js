@@ -9,12 +9,34 @@ import { List } from './List';
 import { Bool } from './Bool';
 import { Set_, nub } from './Set';
 import { Number_ } from './Number';
+import { BTree, Node, Leaf } from './BTree';
 
 import { Coord, Line, Shape } from './Shapes';
+
+import { patchBuiltins } from './Number';
+patchBuiltins();
 
 const notEquals = x => y => !x.equals(y);
 
 describe('setoid', () => {
+  test('BTree', () => {
+    const node1 = Node(Leaf, 1, Leaf);
+    const node2 = Node(node1, 1, node1);
+    const leaf = Leaf;
+
+    expect(leaf.equals(node1)).toBe(false);
+    expect(node1.equals(Leaf)).toBe(false);
+    expect(leaf.equals(Leaf)).toBe(true);
+
+    expect(Node(Leaf, 1, Leaf).equals(node1)).toBe(true);
+    expect(Node(Leaf, 2, Leaf).equals(node1)).toBe(false);
+    expect(Node(node1, 2, Leaf).equals(node1)).toBe(false);
+
+    expect(Node(node1, 1, Leaf).equals(node2)).toBe(false);
+    expect(Node(node1, 1, node1).equals(node2)).toBe(true);
+
+  });
+
   test('Coord', () => {
     const point1 = Coord(1,2,3);
     const point2 = Coord(1,2,3);

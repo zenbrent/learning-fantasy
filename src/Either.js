@@ -66,6 +66,20 @@ Either.prototype.reduce = function (f) {
   })
 }
 
+// Setoid
+Either.prototype.equals = function (that) {
+  return this.cata({
+    Left: v1 => that.cata({
+      Left: v2 => v1.equals(v2),
+      Right: () => false,
+    }),
+    Right: v1 => that.cata({
+      Left: () => false,
+      Right: v2 => v1.equals(v2)
+    }),
+  })
+}
+
 Either.prototype.traverse = function (T) {
   return f => this.cata({
     Left: val => Left(T.of(val)),

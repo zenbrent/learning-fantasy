@@ -33,6 +33,30 @@ BTree.prototype.map = function (f) {
   });
 }
 
+BTree.prototype.equals = function (that) {
+  return this.cata({
+    Leaf: () => Leaf.is(that),
+    Node: (left, x, right) =>
+      x.equals(that.x) &&
+      left.equals(that.left) &&
+      right.equals(that.right)
+  });
+}
+
+BTree.prototype.ap = function (that) {
+  return this.cata({
+    Leaf: () => this,
+    Node: (left, x, right) => that.cata({
+      Leaf: () => that,
+      Node: () => Node(
+        left.ap(that.left),
+        that.x(x),
+        right.ap(that.right)
+      )
+    })
+  });
+}
+
 BTree.prototype.traverse = function (T) {
   return f => this.cata({
     Node: (l, n, r) =>
