@@ -6,6 +6,12 @@ Going through these great tutorials:
 
 http://www.tomharding.me/fantasy-land/
 
+Some articles to follow up with:
+
+http://www.tomharding.me/2017/04/15/functions-as-functors/
+
+http://www.tomharding.me/2017/04/27/pairs-as-functors/
+
 ## Available Scripts
 
 In the project directory, you can run:
